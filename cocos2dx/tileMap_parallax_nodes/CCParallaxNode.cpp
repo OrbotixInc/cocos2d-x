@@ -28,13 +28,13 @@ THE SOFTWARE.
 #include "support/data_support/ccCArray.h"
 
 namespace cocos2d {
-
+    
 	class CCPointObject : CCObject
 	{
 		CC_SYNTHESIZE(CCPoint, m_tRatio, Ratio)
 		CC_SYNTHESIZE(CCPoint, m_tOffset, Offset)
 		CC_SYNTHESIZE(CCNode *,m_pChild, Child)	// weak ref
-
+        
 		static CCPointObject * pointWithCCPoint(CCPoint ratio, CCPoint offset)
 		{
 			CCPointObject *pRet = new CCPointObject();
@@ -50,7 +50,7 @@ namespace cocos2d {
 			return true;
 		}
 	};
-
+    
 	CCParallaxNode::CCParallaxNode()
 	{
 		m_pParallaxArray = ccArrayNew(5);		
@@ -120,6 +120,17 @@ namespace cocos2d {
 		}
 		return ret;
 	}
+    
+    void CCParallaxNode::incrementOffset(cocos2d::CCPoint offset, cocos2d::CCNode *node)
+    {
+        for( unsigned int i=0; i < m_pParallaxArray->num; i++) {
+            CCPointObject *point = (CCPointObject*)m_pParallaxArray->arr[i];
+            if(point->getChild()->isEqual(node)) {
+                point->setOffset(ccpAdd(point->getOffset(), offset));
+                break;
+            }
+        }
+    }
 
 	/*
 	The positions are updated at visit because:

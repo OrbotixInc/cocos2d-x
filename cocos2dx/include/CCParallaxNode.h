@@ -56,6 +56,7 @@ namespace cocos2d {
 		virtual void removeChild(CCNode* child, bool cleanup);
 		virtual void removeAllChildrenWithCleanup(bool cleanup);
 		virtual void visit(void);
+        void incrementOffset(cocos2d::CCPoint offset, cocos2d::CCNode *node);
 	private:
 		CCPoint absolutePosition();
 	protected:
