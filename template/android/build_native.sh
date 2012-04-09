@@ -1,11 +1,11 @@
 # set params
-NDK_ROOT=__ndkroot__
-COCOS2DX_ROOT=__cocos2dxroot__
-GAME_ROOT=$COCOS2DX_ROOT/__projectname__
+NDK_ROOT=$ANDROID_NDK_ROOT
+COCOS2DX_ROOT=../libs/cocos2d-x/
+GAME_ROOT=../
 GAME_ANDROID_ROOT=$GAME_ROOT/android
 RESOURCE_ROOT=$GAME_ROOT/Resources
 
-buildexternalsfromsource=
+# buildexternalsfromsource=
 
 usage(){
 cat << EOF
