@@ -335,5 +335,16 @@ void CCParticleSystemQuad::draw()
 	// restore GL default state
 	// -
 }
+    
+CCParticleSystemQuad* CCParticleSystemQuad::duplicate()
+{
+    CCParticleSystemQuad *system = new CCParticleSystemQuad();
+    system->autorelease();
+    if (CCParticleSystem::duplicate(*system)) {
+        
+    }
+    
+    return system;
+}
 
 }// namespace cocos2d

@@ -326,6 +326,79 @@ bool CCParticleSystem::initWithDictionary(CCDictionary<std::string, CCObject*> *
 	CC_SAFE_DELETE(image);
 	return bRet;
 }
+    
+bool CCParticleSystem::duplicate(CCParticleSystem &system)
+{
+    bool bRet = false;
+    do 
+    {
+        if(system.initWithTotalParticles(m_uTotalParticles))
+        {
+            // angle
+            system.setAngle(m_fAngle);
+            system.setAngleVar(m_fAngleVar);
+            
+            // duration
+            system.setDuration(m_fDuration);
+            
+            // blend function 
+            system.setBlendFunc(m_tBlendFunc);
+            
+            // color
+            system.setStartColor(m_tStartColor);
+            system.setStartColorVar(m_tStartColorVar);
+
+            system.setEndColor(m_tEndColor);
+            system.setEndColorVar(m_tEndColorVar);
+
+            // particle size
+            system.setStartSize(m_fStartSize);
+            system.setStartSizeVar(m_fStartSizeVar);
+            system.setEndSize(m_fEndSize);
+            system.setEndSizeVar(m_fEndSizeVar);
+            
+            // position
+            system.setPosition(this->getPosition());
+            system.setPosVar(m_tPosVar);
+            
+            // Spinning
+            system.setStartSpin(m_fStartSpin);
+            system.setStartSpinVar(m_fStartSpinVar);
+            system.setEndSpin(m_fEndSpin);
+            system.setEndSpinVar(m_fEndSpinVar);
+            
+            system.setEmitterMode(m_nEmitterMode);
+            
+            // Mode A: Gravity + tangential accel + radial accel
+            if( m_nEmitterMode == kCCParticleModeGravity ) {
+                system.modeA = modeA;
+            } else if( m_nEmitterMode == kCCParticleModeRadius ) {
+                system.modeB = modeB;
+            } else {
+                CCAssert( false, "Invalid emitterType in config file");
+                CC_BREAK_IF(true);
+            }
+            
+            // life span
+            system.setLife(m_fLife);
+            system.setLifeVar(m_fLifeVar);
+            
+            // emission Rate
+            system.setEmissionRate(m_fEmissionRate);
+            
+            // texture
+            system.setTexture(m_pTexture);
+            CCAssert( system.m_pTexture != NULL, "CCParticleSystem: error loading the texture");
+            
+            CC_BREAK_IF(!system.m_pTexture);
+            system.m_pTexture->retain();
+            bRet = true;
+        }
+    } while (0);
+    
+    return bRet;
+}
+    
 bool CCParticleSystem::initWithTotalParticles(unsigned int numberOfParticles)
 {
 	m_uTotalParticles = numberOfParticles;

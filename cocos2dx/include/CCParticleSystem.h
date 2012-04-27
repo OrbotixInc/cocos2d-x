@@ -345,6 +345,8 @@ public:
 	@since v0.99.3
 	*/
 	static CCParticleSystem * particleWithFile(const char *plistFile);
+    
+    bool duplicate(CCParticleSystem &system);
 
 	/** initializes a CCParticleSystem from a plist file.
 	This plist files can be creted manually or with Particle Designer:
