@@ -128,6 +128,54 @@ CCParticleSystem::CCParticleSystem()
 	m_tBlendFunc.src = CC_BLEND_SRC;
 	m_tBlendFunc.dst = CC_BLEND_DST;
 }
+    
+CCParticleSystem::CCParticleSystem(const CCParticleSystem &system)
+	:m_sPlistFile(system.m_sPlistFile)
+	,m_fElapsed(0)
+	,m_pParticles(NULL)
+	,m_fEmitCounter(0)
+	,m_uParticleIdx(0)
+#if CC_ENABLE_PROFILERS
+	,m_pProfilingTimer(NULL)
+#endif
+	,m_bIsActive(true)
+	,m_uParticleCount(0)
+	,m_tSourcePosition(system.m_tSourcePosition)
+	,m_tPosVar(system.m_tPosVar)
+	,m_fLife(system.m_fLife)
+	,m_fLifeVar(system.m_fLifeVar)
+	,m_fAngle(system.m_fAngle)
+	,m_fAngleVar(system.m_fAngleVar)
+	,m_fStartSize(system.m_fStartSize)
+	,m_fStartSizeVar(system.m_fStartSizeVar)
+	,m_fEndSize(system.m_fEndSize)
+	,m_fEndSizeVar(system.m_fEndSizeVar)
+	,m_fStartSpin(system.m_fStartSpin)
+	,m_fStartSpinVar(system.m_fStartSpinVar)
+	,m_fEndSpin(system.m_fEndSpin)
+	,m_fEndSpinVar(system.m_fEndSpinVar)
+	,m_fEmissionRate(system.m_fEmissionRate)
+	,m_pTexture(system.m_pTexture)
+	,m_bIsBlendAdditive(system.m_bIsBlendAdditive)
+	,m_ePositionType(system.m_ePositionType)
+	,m_bIsAutoRemoveOnFinish(system.m_bIsAutoRemoveOnFinish)
+	,m_nEmitterMode(system.m_nEmitterMode)
+    ,m_tStartColor(system.m_tStartColor)
+    ,m_tStartColorVar(system.m_tStartColorVar)
+    ,m_tEndColor(system.m_tEndColor)
+    ,m_tEndColorVar(system.m_tEndColorVar)
+    ,m_fDuration(system.m_fDuration)
+    ,m_tBlendFunc(system.m_tBlendFunc)
+{
+    if( system.m_nEmitterMode == kCCParticleModeGravity ) {
+        modeA = system.modeA;
+    } else if( system.m_nEmitterMode == kCCParticleModeRadius ) {
+        modeB = system.modeB;
+    }
+    
+    m_pTexture->retain();
+}
+    
 // implementation CCParticleSystem
 CCParticleSystem * CCParticleSystem::particleWithFile(const char *plistFile)
 {
@@ -140,6 +188,7 @@ CCParticleSystem * CCParticleSystem::particleWithFile(const char *plistFile)
 	CC_SAFE_DELETE(pRet)
 	return pRet;
 }
+    
 bool CCParticleSystem::initWithFile(const char *plistFile)
 {
 	bool bRet = false;
@@ -325,78 +374,6 @@ bool CCParticleSystem::initWithDictionary(CCDictionary<std::string, CCObject*> *
     CC_SAFE_DELETE_ARRAY(deflated);
 	CC_SAFE_DELETE(image);
 	return bRet;
-}
-    
-bool CCParticleSystem::duplicate(CCParticleSystem &system)
-{
-    bool bRet = false;
-    do 
-    {
-        if(system.initWithTotalParticles(m_uTotalParticles))
-        {
-            // angle
-            system.setAngle(m_fAngle);
-            system.setAngleVar(m_fAngleVar);
-            
-            // duration
-            system.setDuration(m_fDuration);
-            
-            // blend function 
-            system.setBlendFunc(m_tBlendFunc);
-            
-            // color
-            system.setStartColor(m_tStartColor);
-            system.setStartColorVar(m_tStartColorVar);
-
-            system.setEndColor(m_tEndColor);
-            system.setEndColorVar(m_tEndColorVar);
-
-            // particle size
-            system.setStartSize(m_fStartSize);
-            system.setStartSizeVar(m_fStartSizeVar);
-            system.setEndSize(m_fEndSize);
-            system.setEndSizeVar(m_fEndSizeVar);
-            
-            // position
-            system.setPosition(this->getPosition());
-            system.setPosVar(m_tPosVar);
-            
-            // Spinning
-            system.setStartSpin(m_fStartSpin);
-            system.setStartSpinVar(m_fStartSpinVar);
-            system.setEndSpin(m_fEndSpin);
-            system.setEndSpinVar(m_fEndSpinVar);
-            
-            system.setEmitterMode(m_nEmitterMode);
-            
-            // Mode A: Gravity + tangential accel + radial accel
-            if( m_nEmitterMode == kCCParticleModeGravity ) {
-                system.modeA = modeA;
-            } else if( m_nEmitterMode == kCCParticleModeRadius ) {
-                system.modeB = modeB;
-            } else {
-                CCAssert( false, "Invalid emitterType in config file");
-                CC_BREAK_IF(true);
-            }
-            
-            // life span
-            system.setLife(m_fLife);
-            system.setLifeVar(m_fLifeVar);
-            
-            // emission Rate
-            system.setEmissionRate(m_fEmissionRate);
-            
-            // texture
-            system.setTexture(m_pTexture);
-            CCAssert( system.m_pTexture != NULL, "CCParticleSystem: error loading the texture");
-            
-            CC_BREAK_IF(!system.m_pTexture);
-            system.m_pTexture->retain();
-            bRet = true;
-        }
-    } while (0);
-    
-    return bRet;
 }
     
 bool CCParticleSystem::initWithTotalParticles(unsigned int numberOfParticles)

@@ -66,8 +66,9 @@ public:
     This plist files can be creted manually or with Particle Designer:  
     */
     static CCParticleSystemQuad * particleWithFile(const char *plistFile);
+    static CCParticleSystemQuad * particleFromSystem(const CCParticleSystemQuad &system);
     
-    CCParticleSystemQuad * duplicate();
+    CCParticleSystemQuad(const CCParticleSystemQuad &toCopy);
 
 	/** initialices the indices for the vertices*/
 	void initIndices();

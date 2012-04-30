@@ -103,6 +103,13 @@ CCParticleSystemQuad * CCParticleSystemQuad::particleWithFile(const char *plistF
     CC_SAFE_DELETE(pRet)
         return pRet;
 }
+    
+CCParticleSystemQuad * CCParticleSystemQuad::particleFromSystem(const CCParticleSystemQuad &system)
+{
+    CCParticleSystemQuad *pRet = new CCParticleSystemQuad(system);
+    pRet->autorelease();
+    return pRet;
+}
 
 // pointRect should be in Texture coordinates, not pixel coordinates
 void CCParticleSystemQuad::initTexCoordsWithRect(const CCRect& pointRect)
@@ -336,15 +343,14 @@ void CCParticleSystemQuad::draw()
 	// -
 }
     
-CCParticleSystemQuad* CCParticleSystemQuad::duplicate()
+CCParticleSystemQuad::CCParticleSystemQuad(const CCParticleSystemQuad &toCopy) : CCParticleSystem(toCopy)
 {
-    CCParticleSystemQuad *system = new CCParticleSystemQuad();
-    system->autorelease();
-    if (CCParticleSystem::duplicate(*system)) {
-        
-    }
-    
-    return system;
+    this->initWithTotalParticles(toCopy.m_uTotalParticles);
+
+	m_tBlendFunc = toCopy.m_tBlendFunc;
+	m_ePositionType = toCopy.m_ePositionType;
+	m_nEmitterMode = toCopy.m_nEmitterMode;
+	m_bIsAutoRemoveOnFinish = toCopy.m_bIsAutoRemoveOnFinish;
 }
 
 }// namespace cocos2d
