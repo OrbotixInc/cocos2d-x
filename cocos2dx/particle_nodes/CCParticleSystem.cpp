@@ -167,6 +167,7 @@ CCParticleSystem::CCParticleSystem(const CCParticleSystem &system)
     ,m_tEndColorVar(system.m_tEndColorVar)
     ,m_fDuration(system.m_fDuration)
     ,m_tBlendFunc(system.m_tBlendFunc)
+    ,m_fTimeScale(system.m_fTimeScale)
 {
     if( system.m_nEmitterMode == kCCParticleModeGravity ) {
         modeA = system.modeA;
