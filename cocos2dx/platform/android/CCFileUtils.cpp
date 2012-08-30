@@ -34,7 +34,7 @@ NS_CC_BEGIN
 #include "jni/MessageJni.h"
 
 // record the resource path
-static string s_strResourcePath = "";
+static string s_strResourcePath = ""; // /mnt/sdcard/Android/obb/com.orbotix.exile/main_expansion.obb
     
 static CCFileUtils* s_pFileUtils = NULL;
 
@@ -46,6 +46,11 @@ CCFileUtils* CCFileUtils::sharedFileUtils()
         s_strResourcePath = getApkPath();
     }
     return s_pFileUtils;
+}
+
+void CCFileUtils::setAssetZip(const string zipPath)
+{
+    s_strResourcePath = zipPath;
 }
 
 void CCFileUtils::purgeFileUtils()
@@ -92,16 +97,27 @@ unsigned char* CCFileUtils::getFileData(const char* pszFileName, const char* psz
     {
         // read from apk
         string pathWithoutDirectory = fullPath;
-        
+
+        // insert resource directory prefix
         fullPath.insert(0, m_obDirectory.c_str());
-        fullPath.insert(0, "assets/");
-        pData =  CCFileUtils::getFileDataFromZip(s_strResourcePath.c_str(), fullPath.c_str(), pSize);
-        
-        if (! pData && m_obDirectory.size() > 0)
+
+        // check to see if we are loading from an expansion file
+        if (s_strResourcePath.find("Android/obb") != std::string::npos)
         {
-            // search from root
-            pathWithoutDirectory.insert(0, "assets/");
-            pData =  CCFileUtils::getFileDataFromZip(s_strResourcePath.c_str(), pathWithoutDirectory.c_str(), pSize);
+            // loading from an expansion file, so we will go directly there to load the file data
+            CCLog("Getting something from %s at path %s", s_strResourcePath.c_str(), fullPath.c_str());
+            pData =  CCFileUtils::getFileDataFromZip(s_strResourcePath.c_str(), fullPath.c_str(), pSize);
+        } else {
+            // loading from assets, so continue as normal
+            fullPath.insert(0, "assets/");
+            pData =  CCFileUtils::getFileDataFromZip(s_strResourcePath.c_str(), fullPath.c_str(), pSize);
+            
+            if (! pData && m_obDirectory.size() > 0)
+            {
+                // search from root
+                pathWithoutDirectory.insert(0, "assets/");
+                pData =  CCFileUtils::getFileDataFromZip(s_strResourcePath.c_str(), pathWithoutDirectory.c_str(), pSize);
+            }
         }
     }
     else

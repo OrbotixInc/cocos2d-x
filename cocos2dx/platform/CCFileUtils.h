@@ -40,6 +40,7 @@ class CC_DLL CCFileUtils
 {
 public:
     static CCFileUtils* sharedFileUtils();
+    static void setAssetZip(const std::string zipFilePath);
     static void purgeFileUtils();
 
     void purgeCachedEntries();
