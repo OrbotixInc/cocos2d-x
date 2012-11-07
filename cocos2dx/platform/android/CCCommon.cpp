@@ -34,6 +34,7 @@ NS_CC_BEGIN
 
 void CCLog(const char * pszFormat, ...)
 {
+	return;
     char buf[MAX_LEN];
 
     va_list args;
